@@ -3,17 +3,19 @@ package da;
 
 import DAv2.da.R;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-//import java.util.Random;
-import java.math.*;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnLongClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -21,18 +23,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.RelativeLayout;
+import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+
 import android.graphics.Color;
 
 ///////////////////////////////////////// INÍCIO DA CLASSE ///////////////////////////////////////////////////////////////////////////////////////////////////	
 
-public class Questao extends QuestaoConector implements OnItemSelectedListener{
+public class Questao extends QuestaoConector implements OnItemSelectedListener, OnTouchListener{
 	
 ///////////////////////////////// VARIÁVEIS PÚBLICAS /////////////////////////////////////////////////////////////////////////////////////////////////////////	
 	
@@ -68,6 +71,12 @@ public class Questao extends QuestaoConector implements OnItemSelectedListener{
 	//variável de recursos
 	Resources rc;
 	
+	//private static final String TAG = "Gestures";
+	//GestureDetector gestureDetector;
+	
+	ScrollView sv;
+	
+	
 ///////////////////////////////// FIM DAS VARIÁVEIS PÚBLICAS /////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
 	
@@ -97,7 +106,8 @@ public class Questao extends QuestaoConector implements OnItemSelectedListener{
 		txtBuscar = (EditText) findViewById(R.id.editText1);
 		btnSpinner = (Spinner) findViewById(R.id.escolhedor);
 		btnTema = (Button) findViewById(R.id.btnTema);
-		questoesTematicas = new ArrayList<Integer>();					
+		questoesTematicas = new ArrayList<Integer>();		
+		sv = (ScrollView) findViewById(R.id.scrollView);
 		
 		if(z!=-1){
 			carregarQuestao(z);
@@ -106,9 +116,45 @@ public class Questao extends QuestaoConector implements OnItemSelectedListener{
 		
 		//chamando o método que muda as cores
 		mudarACorDosLayouts();
+				
+		//CustomGestureDetector customGestureDetector = new CustomGestureDetector();	
+		//gestureDetector = new GestureDetector(Questao.this, Questao.this);
+		
+		//MainActivity ma = new MainActivity(Questao.this);				
 
 /////////////////////////////INÍCIO DOS MÉTODOS DOS BOTÕES////////////////////////////////////////////////////////////////		
-
+		rd[2].setOnLongClickListener(new OnLongClickListener() {
+			
+			@Override
+			public boolean onLongClick(View v) {
+				// TODO Auto-generated method stub
+				return true;
+			}
+		});
+		
+		rd[2].setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				
+				return false;
+			}
+		});
+		
+		sv.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		});
+			
+		
+		
+		
+		
 		// método para trabalhar com o Sortear
 		btnSortear.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -249,8 +295,7 @@ public class Questao extends QuestaoConector implements OnItemSelectedListener{
 	
 	
 ///////////////////////////////////////// INÍCIO DOS MÉTODOS AUXILIARES //////////////////////////////////////////////////////////////////////////////////////////////////	
-	
-
+		
 	@SuppressLint("DefaultLocale")
 	public void mudarACorDosLayouts(){
 		linearLayout3 = (LinearLayout)findViewById(R.id.linearlayout3);
@@ -383,6 +428,75 @@ public class Questao extends QuestaoConector implements OnItemSelectedListener{
         // The activity has become visible (it is now "resumed").
     }
 ///////////////////////////////////////// FIM DOS MÉTODOS AUXILIARES //////////////////////////////////////////////////////////////////////////////////////////////////		
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	
+	
+	
+/*
+	@Override
+	public boolean onDown(MotionEvent e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void onShowPress(MotionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean onSingleTapUp(MotionEvent e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void onLongPress(MotionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean onFling(MotionEvent motionEvent1, MotionEvent motionEvent2, float velocityX, float velocityY) {
+		if (motionEvent1.getY() - motionEvent2.getY() > 50) {
+            Toast.makeText(this, "You Swiped up!", Toast.LENGTH_LONG).show();
+            return true;
+        }
+
+        if (motionEvent2.getY() - motionEvent1.getY() > 50) {
+            Toast.makeText(this, "You Swiped Down!", Toast.LENGTH_LONG).show();
+            return true;
+        }
+
+        if (motionEvent1.getX() - motionEvent2.getX() > 50) {
+            Toast.makeText(this, "You Swiped Left!", Toast.LENGTH_LONG).show();
+            return true;
+        }
+
+        if (motionEvent2.getX() - motionEvent1.getX() > 50) {
+            Toast.makeText(this, "You Swiped Right!", Toast.LENGTH_LONG).show();
+            return true;
+        } else {
+            return true;
+        }
+	}*/
+
+	
+
+	
 }
 
 ///////////////////////////////////////// FIM DA CLASSE //////////////////////////////////////////////////////////////////////////////////////////////////	
