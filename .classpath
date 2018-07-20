@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="DAv2/src"/>
+	<classpathentry kind="lib" path="DAv2/bin/dexedLibs/annotations-1109c7b49ccd3614a4e699187a4f5a8c.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="DAv2/bin/classes"/>
+</classpath>

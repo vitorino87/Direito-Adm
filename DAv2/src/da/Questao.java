@@ -11,6 +11,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.GestureDetector;
+import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,6 +25,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -35,7 +37,7 @@ import android.graphics.Color;
 
 ///////////////////////////////////////// INÍCIO DA CLASSE ///////////////////////////////////////////////////////////////////////////////////////////////////	
 
-public class Questao extends QuestaoConector implements OnItemSelectedListener, OnTouchListener{
+public class Questao extends QuestaoConector implements OnItemSelectedListener, OnTouchListener, OnGestureListener, OnDoubleTapListener{
 	
 ///////////////////////////////// VARIÁVEIS PÚBLICAS /////////////////////////////////////////////////////////////////////////////////////////////////////////	
 	
@@ -72,7 +74,7 @@ public class Questao extends QuestaoConector implements OnItemSelectedListener, 
 	Resources rc;
 	
 	//private static final String TAG = "Gestures";
-	//GestureDetector gestureDetector;
+	GestureDetector gestureDetector;
 	
 	ScrollView sv;
 	
@@ -118,42 +120,33 @@ public class Questao extends QuestaoConector implements OnItemSelectedListener, 
 		mudarACorDosLayouts();
 				
 		//CustomGestureDetector customGestureDetector = new CustomGestureDetector();	
-		//gestureDetector = new GestureDetector(Questao.this, Questao.this);
+		gestureDetector = new GestureDetector(Questao.this, Questao.this);
 		
 		//MainActivity ma = new MainActivity(Questao.this);				
 
-/////////////////////////////INÍCIO DOS MÉTODOS DOS BOTÕES////////////////////////////////////////////////////////////////		
-		rd[2].setOnLongClickListener(new OnLongClickListener() {
-			
-			@Override
-			public boolean onLongClick(View v) {
-				// TODO Auto-generated method stub
-				return true;
-			}
-		});
-		
-		rd[2].setOnTouchListener(new OnTouchListener() {
-			
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-				
-				return false;
-			}
-		});
-		
+/////////////////////////////INÍCIO DOS MÉTODOS DOS BOTÕES////////////////////////////////////////////////////////////////						
 		sv.setOnTouchListener(new OnTouchListener() {
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				// TODO Auto-generated method stub
-				return false;
+				gestureDetector.onTouchEvent(event);
+				sv.onTouchEvent(event);
+				return true;
 			}
 		});
-			
 		
-		
-		
+		for(int i=0;i<5;i++){
+			rd[i].setOnTouchListener(new OnTouchListener() {
+				
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+					// TODO Auto-generated method stub
+					gestureDetector.onTouchEvent(event);
+					return false;
+				}
+			});
+		}						
 		
 		// método para trabalhar com o Sortear
 		btnSortear.setOnClickListener(new View.OnClickListener() {
@@ -296,6 +289,8 @@ public class Questao extends QuestaoConector implements OnItemSelectedListener, 
 	
 ///////////////////////////////////////// INÍCIO DOS MÉTODOS AUXILIARES //////////////////////////////////////////////////////////////////////////////////////////////////	
 		
+	
+	
 	@SuppressLint("DefaultLocale")
 	public void mudarACorDosLayouts(){
 		linearLayout3 = (LinearLayout)findViewById(R.id.linearlayout3);
@@ -435,14 +430,11 @@ public class Questao extends QuestaoConector implements OnItemSelectedListener, 
 		return false;
 	}
 
-	
-	
-	
-/*
 	@Override
 	public boolean onDown(MotionEvent e) {
 		// TODO Auto-generated method stub
-		return false;
+		
+		return true;
 	}
 
 	@Override
@@ -460,7 +452,7 @@ public class Questao extends QuestaoConector implements OnItemSelectedListener, 
 	@Override
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
@@ -472,31 +464,57 @@ public class Questao extends QuestaoConector implements OnItemSelectedListener, 
 	@Override
 	public boolean onFling(MotionEvent motionEvent1, MotionEvent motionEvent2, float velocityX, float velocityY) {
 		if (motionEvent1.getY() - motionEvent2.getY() > 50) {
-            Toast.makeText(this, "You Swiped up!", Toast.LENGTH_LONG).show();
-            return true;
+            //Toast.makeText(this, "You Swiped up!", Toast.LENGTH_LONG).show();
+            return false;
         }
 
         if (motionEvent2.getY() - motionEvent1.getY() > 50) {
-            Toast.makeText(this, "You Swiped Down!", Toast.LENGTH_LONG).show();
-            return true;
+            //Toast.makeText(this, "You Swiped Down!", Toast.LENGTH_LONG).show();
+            return false;
         }
 
         if (motionEvent1.getX() - motionEvent2.getX() > 50) {
-            Toast.makeText(this, "You Swiped Left!", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "You Swiped Left!", Toast.LENGTH_LONG).show();
+            int aux = h - 1;
+			if (z < aux) {
+				carregarQuestao(++z);
+			}
+			mudarACorDosLayouts();
             return true;
         }
 
         if (motionEvent2.getX() - motionEvent1.getX() > 50) {
-            Toast.makeText(this, "You Swiped Right!", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "You Swiped Right!", Toast.LENGTH_LONG).show();
+            if (z > 0) {
+				carregarQuestao(--z);
+			}
+			mudarACorDosLayouts();
             return true;
         } else {
             return true;
         }
-	}*/
+	}
 
-	
+	@Override
+	public boolean onSingleTapConfirmed(MotionEvent e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
-	
+	@Override
+	public boolean onDoubleTap(MotionEvent e) {
+		// TODO Auto-generated method stub
+		if(z!=-1){
+			QuestaoAux.checked(z, b, rd, Questao.this, auxiliarEmbaralharAlternativas);
+		}		
+		return true;
+	}
+
+	@Override
+	public boolean onDoubleTapEvent(MotionEvent e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
 
 ///////////////////////////////////////// FIM DA CLASSE //////////////////////////////////////////////////////////////////////////////////////////////////	
